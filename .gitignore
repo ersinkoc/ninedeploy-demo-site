@@ -1,0 +1,23 @@
+.temp_files/
+
+.wrongstack/
+!/.wrongstack/
+/.wrongstack/*
+!/.wrongstack/project.json
+
+.dfmt/
+node_modules/
+.claude/
+
+# Next.js
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Ortam ve veri (yalnızca örnek dosya depoda durur)
+.env
+.env.local
+.env.*.local
+!.env.example
+.data/

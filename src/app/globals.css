@@ -1,0 +1,262 @@
+@import "tailwindcss";
+@import "../styles/design-tokens.css";
+
+/*
+  Kit: tech-blueprint — "mühendislik çizim masası".
+  Buradaki her değer ya bir token'a ya da token türevine bağlı; literal renk/yarıçap yok.
+  Eklenen tek şey: display tip kademesi (kit kademesi 3xl'de bitiyordu) ve blueprint
+  zemin/hareket yardımcıları.
+*/
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Üretici kusuru düzeltmesi: `design materialize`, `dark.primary` override'ını
+   `.dark` bloğuna yazmıyor (aynı call'daki `dark.paper-primary` ile anahtar
+   çakışması); ışık değeri (48%) koyuya sızıyordu ve ölçülen kontrast 2.15:1'di.
+   Koyu kutupta primary = kit'in parlak etkileşim tonu, ki `--ring` olarak doğru
+   yazılıyor; literal yerine o token'a bağlanır (üretilmiş dosya elle düzenlenmez).
+   `html.` öneki gerekir: üretilen `.dark` bloğu çıktıda SONRA geliyor, eşit
+   özgüllükte sıralama kazanırdı (ölçüldü: kural yutuldu). */
+html.dark {
+  --primary: var(--ring);
+}
+
+@theme {
+  /* Pazarlama başlıkları için uzantı kademesi — aynı idiom, tek kaynak. */
+  --text-4xl: clamp(1.75rem, 1.15rem + 2.1vw, 2.375rem);
+  --text-5xl: clamp(2.125rem, 1.3rem + 3.1vw, 3.25rem);
+  --text-display: clamp(2.45rem, 1.45rem + 4.5vw, 4.5rem);
+  --leading-prose: 1.65;
+}
+
+@theme inline {
+  /* Sönük metin rengi kutuba göre değişir: normal bölümde `--muted`,
+     ters kâğıtta (`bp-paper`) `--bg` tonunda karışım. Bileşenler yalnız
+     `text-fg-muted` kullanır, kutup farkını bilmez. */
+  --color-fg-muted: var(--fg-muted);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --fg-muted: var(--muted);
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--leading-prose);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--primary);
+    color: var(--bg);
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+
+  /* Chrome UA: `fieldset { min-inline-size: min-content }`. Bu, kurucudaki
+     seçim satırlarını 320px'de kabın dışına itiyor (ölçülen 383px taşma).
+     Izgara/hücre genişliğine uyması için sıfırlanır. */
+  fieldset {
+    min-inline-size: 0;
+  }
+}
+
+/* ── Zemin ve yüzeyler ─────────────────────────────────────────────── */
+
+@utility bp-grid {
+  /* İnce ölçü ızgarası + her 4 adımda bir ana çizgi. */
+  background-image:
+    linear-gradient(to right, var(--grid-strong) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-strong) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size:
+    calc(var(--spacing-4) * 4) calc(var(--spacing-4) * 4),
+    calc(var(--spacing-4) * 4) calc(var(--spacing-4) * 4),
+    var(--spacing-4) var(--spacing-4),
+    var(--spacing-4) var(--spacing-4);
+  background-position: -1px -1px;
+}
+
+@utility bp-paper {
+  /* Polarite değişimi: light modda mürekkep zemini (blueprint), dark modda kâğıt.
+     Buradaki yeniden tanımlar YÜZEYSEL token'ları çevirir; böylece bölüm içinde
+     `text-fg`, `bg-surface`, `border-border`, `text-primary` yine doğru kalır —
+     bileşenler hangi kutupta olduklarını bilmek zorunda değil.
+     `--paper-*` token'ları src/styles/design-tokens.css'te (kit set'i). */
+  background-color: var(--paper-bg);
+  color: var(--paper-fg);
+  /* TAM polarite değişimi: kâğıt, kendi başına bir temaymış gibi davranır.
+     Böylece `text-fg` = mürekkep, `bg-primary text-bg` = doygun düğme etiketi,
+     `border-border` = kılcal çizgi — hepsi her iki kutupta da doğru kalır.
+     Düz metinde `text-bg` KULLANILMAZ (yüzey rengidir, görünmez olur); onun
+     yerine `text-fg` veya `text-fg-muted` yazılır. */
+  --bg: var(--paper-bg);
+  --fg: var(--paper-fg);
+  --surface: color-mix(in oklab, var(--paper-bg) 88%, var(--paper-fg));
+  --muted: color-mix(in oklab, var(--paper-fg) 72%, var(--paper-bg));
+  --fg-muted: color-mix(in oklab, var(--paper-fg) 76%, var(--paper-bg));
+  --primary: var(--paper-primary);
+  --accent: var(--paper-accent);
+  --success: var(--paper-success);
+  --danger: var(--paper-danger);
+  --ring: var(--paper-primary);
+  --border: color-mix(in oklab, var(--paper-fg) 34%, transparent);
+  --grid: color-mix(in oklab, var(--paper-fg) 9%, transparent);
+  --grid-strong: color-mix(in oklab, var(--paper-fg) 20%, transparent);
+}
+
+@utility bp-hairline {
+  /* Kılcal ayraç — ızgara çizgisi tonunda. */
+  border-color: var(--grid-strong);
+}
+
+@utility bp-hatch {
+  /* Kullanılamayan slot / dolu hücre dokusu. */
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--grid-strong) 0 1px,
+    transparent 1px calc(var(--spacing-2))
+  );
+}
+
+@utility bp-rule {
+  /* İnce teknik çizgi. */
+  height: var(--border-hairline);
+  background-color: var(--border);
+}
+
+/* ── Hareket ───────────────────────────────────────────────────────── */
+
+@keyframes bp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--spacing-3));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bp-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes bp-draw {
+  from {
+    stroke-dashoffset: 1400;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes bp-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes bp-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@utility bp-reveal {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bp-reveal {
+    opacity: 0;
+  }
+
+  .bp-reveal.is-in {
+    animation: bp-rise var(--duration-slow) var(--ease-standard) both;
+  }
+
+  .bp-flow {
+    stroke-dasharray: 6 6;
+    animation: bp-flow 1.4s linear infinite;
+  }
+
+  .bp-draw {
+    stroke-dasharray: 1400;
+    animation: bp-draw 1100ms var(--ease-emphasized) both;
+  }
+
+  .bp-blink {
+    animation: bp-blink 1.8s var(--ease-standard) infinite;
+  }
+
+  .bp-ticker-track {
+    animation: bp-ticker 42s linear infinite;
+  }
+
+  .bp-ticker:hover .bp-ticker-track,
+  .bp-ticker:focus-within .bp-ticker-track {
+    animation-play-state: paused;
+  }
+
+  .bp-d1 {
+    animation-delay: calc(var(--duration-fast) * 1);
+  }
+  .bp-d2 {
+    animation-delay: calc(var(--duration-fast) * 2);
+  }
+  .bp-d3 {
+    animation-delay: calc(var(--duration-fast) * 3);
+  }
+  .bp-d4 {
+    animation-delay: calc(var(--duration-fast) * 4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
