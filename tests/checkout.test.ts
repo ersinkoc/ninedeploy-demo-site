@@ -105,7 +105,7 @@ describe("POST /api/checkout", () => {
     const stored = await reservations.findReservation(String(body.ref));
     const training = slots.buildAvailability; // referans: modül yüklendi
     expect(typeof training).toBe("function");
-    expect(stored?.amountEUR).toBe(6500); // katalog: destek-egitim · 90 dk
+    expect(stored?.amountEUR).toBe(170); // katalog: destek-egitim · 90 dk (EUR)
     expect(stored?.amountEUR).not.toBe(1);
     expect(stored?.durationMinutes).toBe(90);
   });

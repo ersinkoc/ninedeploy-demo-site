@@ -45,8 +45,8 @@
   --paper-ink: oklch(25% 0.06 250);
   --paper-bg: oklch(96% 0.01 230);
   --paper-fg: oklch(25% 0.06 250);
-  --paper-primary: oklch(48% 0.13 230);
-  --paper-accent: oklch(50% 0.12 80);
+  --paper-primary: oklch(43% 0.13 230);
+  --paper-accent: oklch(46% 0.12 80);
   --paper-success: oklch(48% 0.14 155);
   --paper-danger: oklch(52% 0.18 25);
 }

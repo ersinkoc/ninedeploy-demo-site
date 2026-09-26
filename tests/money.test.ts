@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 /**
  * Para katmanı — Stripe `unit_amount` buradan doğuyor, yani buradaki bir kayma
  * müşteriden yanlış tutar tahsil edilmesi demektir.
- * TL fiyatları tam sayı; kuruş dönüşümü floating-pointartefaktı üretmemeli.
+ * EUR fiyatları tam sayı; sent dönüşümü floating-point artefaktı üretmemeli.
  */
 
 const allDurations = requestTypes.flatMap((type) =>
@@ -21,7 +21,7 @@ const allDurations = requestTypes.flatMap((type) =>
 );
 
 describe("katalog fiyat verisi", () => {
-  it("her süre tam sayı, pozitif bir TL bedeli taşır", () => {
+  it("her süre tam sayı, pozitif bir EUR bedeli taşır", () => {
     expect(allDurations.length).toBeGreaterThan(8);
     for (const entry of allDurations) {
       expect(Number.isInteger(entry.priceEUR)).toBe(true);
@@ -99,7 +99,7 @@ describe("priceOf → toCents zinciri (uçtan uca tutar)", () => {
     const priced = priceOf({
       requestType: String(type?.id),
       topicId: String(type?.topics[0]?.id),
-      minutes: 1, // 1 TL'lik bir tur atlatma denemesi
+      minutes: 1, // katalogda olmayan bir dakika ile fiyat düşürme denemesi
     });
     expect(priced).toEqual({ error: "Seçilen süre bu talep türünde yok." });
   });
@@ -110,10 +110,10 @@ describe("görünen para ve süre metni", () => {
     const text = formatPrice(6500);
     expect(text).toContain("6");
     expect(text).toContain("500");
-    expect(text).toMatch(/₺/);
-    expect(/[,.]\d{1,2}$/.test(text)).toBe(false); // kuruş ondalığı basılmamalı
+    expect(text).toMatch(/€/);
+    expect(/[,.]\d{1,2}$/.test(text)).toBe(false); // sent ondalığı basılmamalı
     for (const entry of allDurations) {
-      expect(formatPrice(entry.priceEUR)).toMatch(/₺/);
+      expect(formatPrice(entry.priceEUR)).toMatch(/€/);
     }
   });
 

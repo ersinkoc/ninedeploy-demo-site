@@ -57,9 +57,10 @@ Webhook ucu: `/api/webhooks/stripe` — yerelde
 
 **Anahtar yoksa site DEMO moddadır:** üst şeritte sarı uyarı, akışın tamamı çalışır,
 `/api/checkout` ödeme almadan kayıt üretir ve `/tesekkur` sayfası "ödeme alınmadı"
-rozetini gösterir. Ücretler `src/lib/catalog.ts` içinde **TL** cinsindendir; sunucu
+rozetini gösterir. Ücretler `src/lib/catalog.ts` içinde **EUR** cinsindendir; sunucu
 fiyatı her zaman katalogdan hesaplar, istemciden gelen fiyat yok sayılır
-(kuruş dönüşümü: `toKurus()`).
+(sent dönüşümü: `toCents()`). Yasal satıcı: `site.company` (Ecostack Technology OÜ,
+Tallinn — reg. 16935780, VAT EE102714663).
 
 ## Rotalar
 
