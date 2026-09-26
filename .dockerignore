@@ -1,0 +1,15 @@
+# Konteksi küçük ve deterministik tut: bağımlılıklar ve üretim çıktısı
+# imaj içine kopyalanmaz, `npm ci` + `next build` container içinde çalışır.
+node_modules
+.next
+out
+.git
+.data
+.temp_files
+.wrongstack
+.claude
+.dfmt
+.design
+*.log
+npm-debug.log*
+.DS_Store

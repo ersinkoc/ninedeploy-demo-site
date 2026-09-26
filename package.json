@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "AI ajanları için 1:1 canlı eğitim, yazılım süreci danışmanlığı ve saatlik kiralama — rezervasyonlu satış sitesi",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
